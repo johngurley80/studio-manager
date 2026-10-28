@@ -50,8 +50,10 @@ export function makeObjectives(s: GameState, r: Rng): Objective[] {
   const rep = st.reputation;
   const repRank = 1 + s.studios.filter((x) => x.id !== st.id && x.reputation > rep).length;
   const lastPos = s.history.length ? s.history[s.history.length - 1].position : 1;
-  // The board expects you to finish where your reputation ranks you, but never asks for more than last season.
-  const pos = clamp(Math.max(repRank - exp, lastPos), 1, s.studios.length - 1);
+  // Season one: finish where your reputation ranks you. After that the board wants you to roughly hold last
+  // season's place (one slip allowed), never more than last season, and never an outright title defence.
+  const fromRep = repRank - exp;
+  const pos = s.history.length ? clamp(Math.min(lastPos + 1, Math.max(fromRep, lastPos)), 2, s.studios.length - 1) : clamp(fromRep, 1, s.studios.length - 1);
   const list: Objective[] = [{ kind: 'position', target: pos, text: '' }];
   const pool: [ObjectiveKind, number][] = [
     ['profit', rep > 62 ? 15 : rep > 50 ? 0 : -40],

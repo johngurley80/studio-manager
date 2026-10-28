@@ -543,6 +543,25 @@ export function previewFilm(
   );
 }
 
+/** Current quality read-out for a film that already exists. */
+export function evaluateExisting(s: GameState, f: Film) {
+  return evaluateFilm(
+    {
+      genre: f.genre,
+      tier: f.tier,
+      scriptQuality: f.scriptQuality,
+      genreFit: f.genreFit,
+      demands: f.demands,
+      director: s.directors[f.directorId] ?? null,
+      cast: f.cast,
+      criticsMod: f.criticsMod,
+      audienceMod: f.audienceMod,
+      chemistryMod: f.chemistryMod,
+    },
+    s.actors,
+  );
+}
+
 /** ± range on predictions; better analysts narrow it. */
 export function predictionFuzz(analystLevel: number): number {
   return [0, 18, 13, 9, 6, 3][clamp(analystLevel, 1, 5)];

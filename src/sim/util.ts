@@ -30,6 +30,7 @@ export function fmtMoney(m: number, digits = 1): string {
   const neg = m < 0;
   const a = Math.abs(m);
   let s: string;
+  if (a < 0.0005) return '$0';
   if (a >= 1000) s = `$${(a / 1000).toFixed(2)}B`;
   else if (a >= 1) s = `$${a.toFixed(digits)}M`;
   else s = `$${Math.round(a * 1000)}K`;

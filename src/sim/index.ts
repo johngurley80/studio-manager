@@ -7,6 +7,7 @@ export { Rng, hashString } from './rng';
 export { bestSkill, fullName, marketValue, overall, salaryValue, specialty } from './people';
 export {
   ROLE_LABEL,
+  blendDemands,
   castPairs,
   directorScore,
   estimateGross,
@@ -16,7 +17,7 @@ export {
   pairChemistry,
   rolePerformance,
 } from './film';
-export { autoCast, availableDirectors, availableRoster, isAvailable, predictionFuzz, previewFilm, upfrontCost } from './production';
+export { autoCast, availableDirectors, availableRoster, evaluateExisting, isAvailable, predictionFuzz, previewFilm, upfrontCost } from './production';
 export { competitionFactor, crowding, filmHype, openingsOn } from './release';
 export { bestReleaseWeek } from './rivals';
 export { askingSalary, feeAsk, interested, preferredYears, releaseCost, scoutWeeks, wantsTopBilling } from './transfers';

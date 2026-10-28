@@ -15,7 +15,7 @@ import {
   WEEKS_PER_SEASON,
 } from './data';
 import { studioNames } from './names';
-import { developActor, fullName, generateActor, generateDirector, salaryValue } from './people';
+import { developActor, fullName, generateActor, generateDirector, overall, salaryValue } from './people';
 import { productionWeek, resolveProductionDecision, startFilm, upfrontCost, validateCast, type GreenlightParams } from './production';
 import { boxOfficeWeek, processReleases, scheduleRelease } from './release';
 import { rivalTurn } from './rivals';
@@ -169,6 +169,11 @@ export function newGame(opts: NewGameOptions): GameState {
     body: `Congratulations on your appointment. The board's objectives for season 1:\n${s.board.objectives.map((o) => `• ${o.text}`).join('\n')}\nMiss them and you will get a warning. Miss them twice and you are out.`,
     kind: 'board',
   });
+  pushNews(s, `${studioName} has a new studio head. The trade papers give them a season.`, 'studio');
+  for (const st of s.studios.filter((x) => !x.isPlayer).slice(0, 3)) {
+    const info = STRATEGIES[st.strategy as keyof typeof STRATEGIES];
+    pushNews(s, `${st.name} (${info.label.toLowerCase()}) open the season with ${fmtMoney(st.cash, 0)} in the bank.`, 'studio');
+  }
   pressConference(s, r, null);
   s.cashHistory.push(Math.round(diff.cash * 10) / 10);
   s.rng = r.state;
@@ -450,6 +455,7 @@ export function concludeSeason(state: GameState): GameState {
     }
     for (const d of Object.values(s.directors)) d.age += 1;
     replenishFreeAgents(s, r, 20);
+    pruneWorld(s);
     for (const f of Object.values(s.films)) {
       if (f.studioId !== s.playerId && f.status === 'finished' && (f.releaseSeason ?? 0) < s.season - 3) delete s.films[f.id];
     }
@@ -465,6 +471,19 @@ export function concludeSeason(state: GameState): GameState {
     pressConference(s, r, null);
     s.rng = r.state;
   });
+}
+
+/** Keeps saves small: forgets retired nobodies and the weakest surplus free agents. */
+function pruneWorld(s: GameState): void {
+  const referenced = new Set<string>();
+  for (const f of Object.values(s.films)) for (const c of f.cast) referenced.add(c.actorId);
+  for (const a of Object.values(s.actors)) {
+    if (a.retired && !referenced.has(a.id) && a.awards.length === 0) delete s.actors[a.id];
+  }
+  const pool = Object.values(s.actors)
+    .filter((a) => a.studioId === null && !a.retired && !a.discovered && !referenced.has(a.id))
+    .sort((a, b) => overall(b) + b.starPower * 0.2 - (overall(a) + a.starPower * 0.2));
+  for (const a of pool.slice(90)) delete s.actors[a.id];
 }
 
 export function dismissReview(state: GameState): GameState {

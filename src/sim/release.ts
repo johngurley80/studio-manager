@@ -183,7 +183,7 @@ function buildReport(
     .slice(0, 4);
   const myCurve = curve(me.front);
   const rivalCurves = rivalsSrc.map((x) => curve(x.front));
-  const headlines = makeHeadlines(s, me, rivalsSrc[0]?.film ?? null, r);
+  const headlines = makeHeadlines(s, me, (rivalsSrc.find((x) => x.film.studioId !== f.studioId) ?? rivalsSrc[0])?.film ?? null, r);
   const ticks: ReleaseTick[] = HEADLINE_SLOTS.map((label, i) => ({
     label,
     player: me.weekend * myCurve[i],
