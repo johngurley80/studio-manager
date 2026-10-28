@@ -86,7 +86,7 @@ export function filmTitle(r: Rng, genre: Genre): string {
     case 5:
       return `The ${noun} at ${r.pick(PLACES)}`;
     default:
-      return `A ${adj} ${noun}`;
+      return `${/^[AEIOU]/.test(adj) ? 'An' : 'A'} ${adj} ${noun}`;
   }
 }
 

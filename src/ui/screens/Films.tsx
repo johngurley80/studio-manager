@@ -13,6 +13,7 @@ import {
   autoCast,
   availableDirectors,
   availableRoster,
+  bankruptcyLine,
   bestReleaseWeek,
   blendDemands,
   castPairs,
@@ -331,6 +332,12 @@ function Greenlight({ onDone }: { onDone: () => void }) {
               </dd>
             </dl>
             <p className="mt-3 text-xs text-cream-mute">20% of the budget is paid today, the rest week by week while shooting. Marketing is paid when you set a release date.</p>
+            {me.cash - TIERS[tier].budget - script.price - (director?.fee ?? 0) < 0 && (
+              <p className="mt-3 rounded-lg border border-ember/70 bg-ember/10 p-2 text-sm text-ember">
+                This shoot will put the studio in the red before the film earns anything. The bank closes you down at {fmtMoney(bankruptcyLine(game))}, or after ten
+                weeks overdrawn. Check the films already shooting, or take a loan first.
+              </p>
+            )}
             {err && <p className="mt-3 rounded-lg border border-rouge/60 bg-rouge/10 p-2 text-sm text-rouge-soft">{err}</p>}
             <button className="btn-gold mt-4 w-full text-base" disabled={!!err} onClick={go}>
               Greenlight &ldquo;{title || script.title}&rdquo;

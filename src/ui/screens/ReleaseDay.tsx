@@ -132,7 +132,7 @@ export function ReleaseDay({ report }: { report: ReleaseReport }) {
           <div className="panel relative flex flex-col items-center justify-center overflow-hidden p-4 text-center">
             <div className="label">Opened</div>
             <div className="font-display text-5xl text-gold">#{report.rank}</div>
-            <div className="font-cond text-xs uppercase tracking-wider text-cream-mute">of {report.openers} films in cinemas</div>
+            <div className="font-cond text-xs uppercase tracking-wider text-cream-mute">of {report.openers} film{report.openers === 1 ? '' : 's'} in cinemas</div>
           </div>
           {revealed && (
             <div className="flex flex-col items-center gap-3 sm:col-span-3">

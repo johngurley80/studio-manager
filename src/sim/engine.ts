@@ -260,6 +260,11 @@ function boardMood(s: GameState): void {
   s.board.confidence = clamp(s.board.confidence + (target - s.board.confidence) * 0.04, 0, 100);
 }
 
+/** How far overdrawn the bank lets you go before closing the studio (negative $M). */
+export function bankruptcyLine(s: GameState): number {
+  return -(45 + playerStudio(s).reputation * 0.6);
+}
+
 function solvency(s: GameState): void {
   const me = playerStudio(s);
   if (me.cash >= 0) {
@@ -267,7 +272,7 @@ function solvency(s: GameState): void {
     return;
   }
   s.negativeWeeks += 1;
-  const limit = -(45 + me.reputation * 0.6);
+  const limit = bankruptcyLine(s);
   if (s.negativeWeeks >= 10 || me.cash < limit) {
     s.phase = 'gameover';
     s.gameOver = { reason: 'bankrupt', abs: absWeek(s) };
