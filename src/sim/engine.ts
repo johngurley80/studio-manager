@@ -18,7 +18,7 @@ import { studioNames } from './names';
 import { developActor, fullName, generateActor, generateDirector, overall, salaryValue } from './people';
 import { productionWeek, resolveProductionDecision, startFilm, upfrontCost, validateCast, type GreenlightParams } from './production';
 import { boxOfficeWeek, processReleases, scheduleRelease } from './release';
-import { rivalTurn } from './rivals';
+import { rivalTurn, seedRivalSlates } from './rivals';
 import { Rng, seedFrom } from './rng';
 import { refreshScripts } from './scripts';
 import {
@@ -162,6 +162,7 @@ export function newGame(opts: NewGameOptions): GameState {
   hireScoutImpl(s, r);
   hireScoutImpl(s, r);
   refreshScripts(s, r, diff.rep);
+  seedRivalSlates(s, r);
   s.board.objectives = makeObjectives(s, r);
   pushInbox(s, {
     from: 'The Board',

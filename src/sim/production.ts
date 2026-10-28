@@ -158,7 +158,7 @@ function applyCastingMorale(a: Actor, role: Role): void {
   else a.morale = clamp(a.morale + 2, 0, 100);
 }
 
-function wrapFilm(s: GameState, f: Film): void {
+export function wrapFilm(s: GameState, f: Film): void {
   f.status = 'post';
   f.log.push(`Wrapped after ${f.productionWeeks} weeks of shooting.`);
   for (const c of f.cast) {
